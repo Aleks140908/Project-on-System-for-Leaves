@@ -12,29 +12,47 @@ public class Main {
     }
     //2 state leave
     public static void showFirstOption(){
-        Scanner scan = new Scanner(System.in);
-        System.out.println("ENTER NAME:");
-        String name = scan.nextLine();
+        try{
+            Scanner scanName = new Scanner(System.in);
+            System.out.println("ENTER NAME:");
+            String name = scanName.nextLine();
+            for (char c : name.toCharArray()) {
+                // Check if the character is a number
+                if (Character.isDigit(c)) {
+                    System.out.println("ERROR!There is a number in the name.");
+                    showMenu();
+                    scanNumber();
+                }else{
+                    break;
+                }
+            }
 
-        Scanner scan1 = new Scanner(System.in);
-        System.out.println("ENTER EMAIL:");
-        String email = scan1.nextLine();
+            Scanner scanEmail = new Scanner(System.in);
+            System.out.println("ENTER EMAIL:");
+            String email = scanEmail.nextLine();
 
-        Scanner scan2 = new Scanner(System.in);
-        System.out.println("ENTER IDENTIFICATION NUMBER: ");
-        int idNumber = scan2.nextInt();
+            Scanner scanIdNum = new Scanner(System.in);
+            System.out.println("ENTER IDENTIFICATION NUMBER: ");
+            int idNumber = scanIdNum.nextInt();
 
-        Scanner scan3 = new Scanner(System.in);
-        System.out.println("ENTER BEGINNING OF LEAVE: ");
-        double beginDate = scan3.nextInt();
+            Scanner scanBeginDate = new Scanner(System.in);
+            System.out.println("ENTER BEGINNING OF LEAVE: ");
+            double beginDate = scanBeginDate.nextInt();
 
-        Scanner scan4 = new Scanner(System.in);
-        System.out.println("ENTER END DATE OF LEAVE: ");
-        double endDate= scan4.nextInt();
+            Scanner scanEndDate = new Scanner(System.in);
+            System.out.println("ENTER END DATE OF LEAVE: ");
+            double endDate= scanEndDate.nextInt();
 
-        Scanner scan5 = new Scanner(System.in);
-        System.out.println("ENTER PAID OR UNPAID IS THE LEAVE: ");
-        String paidOrUnpaid = scan.nextLine();
+            Scanner scanPaidOrUnpaid = new Scanner(System.in);
+            System.out.println("ENTER PAID OR UNPAID IS THE LEAVE: ");
+            String paidOrUnpaid = scanPaidOrUnpaid.nextLine();
+
+        }catch(Exception e){
+            System.out.println("ERROR!Try again");
+            showMenu();
+            scanNumber();
+        }
+
 
     }
     //3 look at leaves
@@ -49,25 +67,36 @@ public class Main {
     public static void showFourthOption(){
 
     }
+
     public static void main(String[] args) {
         showMenu();
+
+        scanNumber();
+
+    }
+    //Scanner for what number the user picked
+    public static void scanNumber(){
         Scanner scan = new Scanner(System.in);
         System.out.print("ENTER NUMBER OF OPTION YOU WOULD LIKE: ");
         int num = scan.nextInt();
-
-        if(num==1){
+        checkOption(num);
+    }
+    //check what option is chosen
+    public static void checkOption(int num) {
+        if (num == 1) {
             showFirstOption();
-        }else if(num==2){
+        } else if (num == 2) {
             showSecondOption();
-        } else if(num==3) {
+        } else if (num == 3) {
             showThirdOption();
-        }else if(num==4){
+        } else if (num == 4) {
             showFourthOption();
-        }else if(num==5){
+        } else if (num == 5) {
             showMenu();
-        }else{
+        } else {
             System.out.println("!INVALID OPTION! PICK ANOTHER ONE");
             showMenu();
         }
     }
+
 }
