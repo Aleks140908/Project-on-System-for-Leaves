@@ -2,6 +2,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
@@ -48,21 +51,21 @@ public class Main {
             //ID!!
             Scanner scanIdNum = new Scanner(System.in);
             System.out.println("ENTER IDENTIFICATION NUMBER: ");
-            int idNumber = scanIdNum.nextInt();
+            int IdNumber = scanIdNum.nextInt();
+            String ID = String.valueOf(IdNumber);
 
 
             //Date Of Beginning!!!
-            Scanner scannerForDateOfBeginning = new Scanner(System.in);
-            System.out.println("Enter a date (yyyy-MM-dd): ");
-            String userInputForBeginningDate = scannerForDateOfBeginning.nextLine();
-            // To parse the users input
-            DateTimeFormatter formatterForBeginningDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+
+
+
 
 
             //Date Of End!!!
             Scanner scannerForDateOfEnd = new Scanner(System.in);
             System.out.println("Enter a date (yyyy-MM-dd): ");
-            String userInputForEndDate = scannerForDateOfBeginning.nextLine();
+            String userInputForEndDate = scannerForDateOfEnd.nextLine();
             // To parse the users input
             DateTimeFormatter formatterForEndDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -72,20 +75,23 @@ public class Main {
             System.out.println("ENTER PAID OR UNPAID IS THE LEAVE: ");
             String paidOrUnpaid = scanPaidOrUnpaid.nextLine();
 
+            ReadNMakeTableForOptionOne();
+
             //Saving into a file!!!
 
-            try {
-                PrintStream ps = new PrintStream("OptionOnSaveInput.txt");
-                   ps.println(name);
-                   ps.print(email);
-                   ps.print(userInputForBeginningDate);
-                   ps.print(userInputForEndDate);
-                   ps.print(paidOrUnpaid);
+          //  try {
+               // PrintStream ps = new PrintStream("OptionOnSaveInput.txt");
+               //    ps.println(name);
+                //   ps.print(email);
+                 //  ps.print(userInputForBeginningDate);
+                  // ps.print(userInputForEndDate);
+                   //ps.print(paidOrUnpaid);
 
-                ps.close();
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+               // ps.close();
+           // } catch (Exception e) {
+               // System.out.println(e);
+           // }
+
             //FIGURE OUT HOW TO MAKE IT A TABLE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }catch(Exception e){
             System.out.println("ERROR!Try again");
@@ -98,6 +104,8 @@ public class Main {
     public static void showSecondOption(){
 
     }
+
+
     //4 look at employee leaves
     public static void showThirdOption(){
 
@@ -154,6 +162,26 @@ public class Main {
             System.out.println("!INVALID OPTION! PICK ANOTHER ONE");
             showMenu();
         }
+    }
+    public static void ReadNMakeTableForOptionOne(String name, String email,String ID,String BegLeave,String EndLeave,String UnOrAPaid){
+        ArrayList<ArrayList<String>> tableForSavingInTheFirstOption = new ArrayList<>();
+
+
+        ArrayList<String> TheFirstRowOfTheTable = new ArrayList<>();
+        TheFirstRowOfTheTable.add("Name");
+        TheFirstRowOfTheTable.add("Email");
+        TheFirstRowOfTheTable.add("Id");
+        TheFirstRowOfTheTable.add("Date of beginning");
+        TheFirstRowOfTheTable.add("Date of end");
+        TheFirstRowOfTheTable.add("Kind of leave");
+        tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
+
+
+        ArrayList<String> TheSecondRowOfTheTable = new ArrayList<>();
+        TheSecondRowOfTheTable.add(name);
+        TheSecondRowOfTheTable.add(email);
+        TheSecondRowOfTheTable.add(ID);
+        tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
     }
 
 }
