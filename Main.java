@@ -104,6 +104,24 @@ public class Main {
                     System.out.println("ERROR!");
                     exception.printStackTrace();
                     showMenu();
+                    Scanner scan = new Scanner(System.in);
+                    System.out.print("ENTER NUMBER OF OPTION YOU WOULD LIKE: ");
+                    int num = scan.nextInt();
+
+                    if (num == 1) {
+                        showFirstOption();
+                    } else if (num == 2) {
+                        showSecondOption();
+                    } else if (num == 3) {
+                        showThirdOption();
+                    } else if (num == 4) {
+                        showFourthOption();
+                    } else if (num == 5) {
+                        showMenu();
+                    } else {
+                        System.out.println("!INVALID OPTION! PICK ANOTHER ONE");
+                        showMenu();
+                    }
 
 
                 }
