@@ -1,12 +1,8 @@
-import java.io.IOException;
-import java.io.PrintStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
 
+import java.io.*;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Scanner;
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
@@ -22,7 +18,7 @@ public class Main {
         try{
 
 
-            //Name!!!
+            //Name
             Scanner scanName = new Scanner(System.in);
             System.out.println("ENTER NAME:");
             String name = scanName.nextLine();
@@ -42,66 +38,134 @@ public class Main {
             }
 
 
-            //Email!!!
+            //Email
             Scanner scanEmail = new Scanner(System.in);
             System.out.println("ENTER EMAIL:");
             String email = scanEmail.nextLine();
 
 
-            //ID!!
+            //ID
             Scanner scanIdNum = new Scanner(System.in);
             System.out.println("ENTER IDENTIFICATION NUMBER: ");
             int IdNumber = scanIdNum.nextInt();
             String ID = String.valueOf(IdNumber);
 
 
-            //Date Of Beginning!!!
+            //Date Of Beginning
+            Scanner scannerForDateOfBeginning = new Scanner(System.in);
+            System.out.println("Enter a date (yyyy-MM-dd): ");
+            String BeginningDate = scannerForDateOfBeginning.nextLine();
+            DateTimeFormatter formatterForBegDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-
-
-
-
-            //Date Of End!!!
+            //Date Of End
             Scanner scannerForDateOfEnd = new Scanner(System.in);
             System.out.println("Enter a date (yyyy-MM-dd): ");
-            String userInputForEndDate = scannerForDateOfEnd.nextLine();
-            // To parse the users input
+            String EndDate = scannerForDateOfEnd.nextLine();
             DateTimeFormatter formatterForEndDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-            //Knd of leave!!!
+            //Kind of leave
             Scanner scanPaidOrUnpaid = new Scanner(System.in);
             System.out.println("ENTER PAID OR UNPAID IS THE LEAVE: ");
             String paidOrUnpaid = scanPaidOrUnpaid.nextLine();
 
-            ReadNMakeTableForOptionOne();
 
-            //Saving into a file!!!
 
-          //  try {
-               // PrintStream ps = new PrintStream("OptionOnSaveInput.txt");
-               //    ps.println(name);
-                //   ps.print(email);
-                 //  ps.print(userInputForBeginningDate);
-                  // ps.print(userInputForEndDate);
-                   //ps.print(paidOrUnpaid);
+            //Create Table
+            ArrayList<ArrayList<String>> tableForSavingInTheFirstOption = new ArrayList<>();
+            ArrayList<String> TheFirstRowOfTheTable = new ArrayList<>();
+            TheFirstRowOfTheTable.add("Name");
+            TheFirstRowOfTheTable.add("Email");
+            TheFirstRowOfTheTable.add("Id");
+            TheFirstRowOfTheTable.add("Date of beginning");
+            TheFirstRowOfTheTable.add("Date of end");
+            TheFirstRowOfTheTable.add("Kind of leave");
+            tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
 
-               // ps.close();
-           // } catch (Exception e) {
-               // System.out.println(e);
-           // }
+            System.out.println();
 
-            //FIGURE OUT HOW TO MAKE IT A TABLE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            ArrayList<String> TheSecondRowOfTheTable = new ArrayList<>();
+            TheSecondRowOfTheTable.add(name);
+            TheSecondRowOfTheTable.add(email);
+            TheSecondRowOfTheTable.add(ID);
+            TheSecondRowOfTheTable.add(BeginningDate);
+            TheSecondRowOfTheTable.add(EndDate);
+            TheSecondRowOfTheTable.add(paidOrUnpaid);
+            tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
+            //save table
+                try {
+                    PrintStream ps = new PrintStream("OptionOnSaveInput.txt");
+                    ps.println(TheFirstRowOfTheTable);
+                    ps.println(TheSecondRowOfTheTable);
+
+                    ps.close();
+                } catch (Exception exception) {
+                    System.out.println("ERROR!");
+                    exception.printStackTrace();
+                    showMenu();
+
+
+                }
+
+
         }catch(Exception e){
             System.out.println("ERROR!Try again");
             showMenu();
             scanNumber();
+            Scanner scan = new Scanner(System.in);
+            System.out.print("ENTER NUMBER OF OPTION YOU WOULD LIKE: ");
+            int num = scan.nextInt();
+
+            if (num == 1) {
+                showFirstOption();
+            } else if (num == 2) {
+                showSecondOption();
+            } else if (num == 3) {
+                showThirdOption();
+            } else if (num == 4) {
+                showFourthOption();
+            } else if (num == 5) {
+                showMenu();
+            } else {
+                System.out.println("!INVALID OPTION! PICK ANOTHER ONE");
+                showMenu();
+            }
 
         }
     }
     //3 look at leaves
     public static void showSecondOption(){
+
+            try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            } catch (IOException e) {
+                System.out.println("ERROR!");
+                e.printStackTrace();
+                showMenu();
+                scanNumber();
+                Scanner scan = new Scanner(System.in);
+                System.out.print("ENTER NUMBER OF OPTION YOU WOULD LIKE: ");
+                int num = scan.nextInt();
+
+                if (num == 1) {
+                    showFirstOption();
+                } else if (num == 2) {
+                    showSecondOption();
+                } else if (num == 3) {
+                    showThirdOption();
+                } else if (num == 4) {
+                    showFourthOption();
+                } else if (num == 5) {
+                    showMenu();
+                } else {
+                    System.out.println("!INVALID OPTION! PICK ANOTHER ONE");
+                    showMenu();
+                }
+            }
 
     }
 
@@ -163,25 +227,4 @@ public class Main {
             showMenu();
         }
     }
-    public static void ReadNMakeTableForOptionOne(String name, String email,String ID,String BegLeave,String EndLeave,String UnOrAPaid){
-        ArrayList<ArrayList<String>> tableForSavingInTheFirstOption = new ArrayList<>();
-
-
-        ArrayList<String> TheFirstRowOfTheTable = new ArrayList<>();
-        TheFirstRowOfTheTable.add("Name");
-        TheFirstRowOfTheTable.add("Email");
-        TheFirstRowOfTheTable.add("Id");
-        TheFirstRowOfTheTable.add("Date of beginning");
-        TheFirstRowOfTheTable.add("Date of end");
-        TheFirstRowOfTheTable.add("Kind of leave");
-        tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
-
-
-        ArrayList<String> TheSecondRowOfTheTable = new ArrayList<>();
-        TheSecondRowOfTheTable.add(name);
-        TheSecondRowOfTheTable.add(email);
-        TheSecondRowOfTheTable.add(ID);
-        tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
-    }
-
 }
