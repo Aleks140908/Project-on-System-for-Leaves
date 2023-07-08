@@ -39,10 +39,10 @@ public class Main {
 
 
     }
-    //2 state leave - have to save all of them only and fix the dates
+    //2 state leave - have to save the requests (all of them)
     public static void showFirstOption(){
         try{
-
+            //Name
             Scanner scanName = new Scanner(System.in);
             System.out.println("ENTER NAME:");
             String name = scanName.nextLine();
@@ -55,85 +55,40 @@ public class Main {
                     break;
                 }
             }
-
+            //Email
             Scanner scanEmail = new Scanner(System.in);
             System.out.println("ENTER EMAIL:");
             String email = scanEmail.nextLine();
-
+            //ID
             Scanner scanIdNum = new Scanner(System.in);
             System.out.println("ENTER IDENTIFICATION NUMBER: ");
             int IdNumber = scanIdNum.nextInt();
             String ID = String.valueOf(IdNumber);
 
-            //Date Of Beginning - check if right
-            Scanner scannerForDateOfBeginning = new Scanner(System.in);
-            System.out.println("Enter a date (yyyy-MM-dd): ");
-            String BeginningDate = scannerForDateOfBeginning .nextLine();
-            SimpleDateFormat dateFormatForBeg= new SimpleDateFormat("yyyy-MM-dd");
-                Date dateBeg = dateFormatForBeg.parse(BeginningDate);
-                String dateStringBeg = dateFormatForBeg.format(dateBeg);
+            //Date Of Beginning
+            Scanner scanTheBegDate = new Scanner(System.in);
+            System.out.print("Enter the beginning date of your leave (dd/MM/yyyy): ");
+            String dateInputForBeg = scanTheBegDate.nextLine();
 
-            //Date Of End - check if right
-            Scanner scannerForDateOfEnd = new Scanner(System.in);
-            System.out.println("Enter a date (yyyy-MM-dd): ");
-            String EndDate = scannerForDateOfEnd.nextLine();
-            SimpleDateFormat dateFormatForEnd = new SimpleDateFormat("yyyy-MM-dd");
-            Date dateEnd = dateFormatForEnd.parse(BeginningDate);
-            String dateStringEnd = dateFormatForEnd.format(dateEnd);
+            SimpleDateFormat dateFormatBeg = new SimpleDateFormat("dd/MM/yyyy");
+            Date dateBeg = dateFormatBeg.parse(dateInputForBeg);
+            String dateBegToString = dateFormatBeg.format(dateBeg);
 
-            Scanner scanPaidOrUnpaid = new Scanner(System.in);
+            //Date Of End
+            Scanner scanTheEndDate = new Scanner(System.in);
+            System.out.print("Enter the end date of your leave (dd/MM/yyyy): ");
+            String dateInputForEnd = scanTheEndDate.nextLine();
+
+            SimpleDateFormat dateFormatEnd = new SimpleDateFormat("dd/MM/yyyy");
+                Date dateEnd = dateFormatEnd.parse(dateInputForEnd);
+                String dateEndToString = dateFormatEnd.format(dateEnd);
+                //paid or unpaid
+                Scanner scanPaidOrUnpaid = new Scanner(System.in);
             System.out.println("ENTER PAID OR UNPAID IS THE LEAVE: ");
             String paidOrUnpaid = scanPaidOrUnpaid.nextLine();
 
-            //from here down maybe worth it
-            //Create Table
-            ArrayList<ArrayList<String>> tableForSavingInTheFirstOption = new ArrayList<>();
-            ArrayList<String> TheFirstRowOfTheTable = new ArrayList<>();
-            TheFirstRowOfTheTable.add("Name");
-            TheFirstRowOfTheTable.add("Email");
-            TheFirstRowOfTheTable.add("Id");
-            TheFirstRowOfTheTable.add("Date of beginning");
-            TheFirstRowOfTheTable.add("Date of end");
-            TheFirstRowOfTheTable.add("Kind of leave");
-            tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
-
-            System.out.println();
-
-            ArrayList<String> TheSecondRowOfTheTable = new ArrayList<>();
-            TheSecondRowOfTheTable.add(name);
-            TheSecondRowOfTheTable.add(email);
-            TheSecondRowOfTheTable.add(ID);
-            TheSecondRowOfTheTable.add(BeginningDate);
-            TheSecondRowOfTheTable.add(EndDate);
-            TheSecondRowOfTheTable.add(paidOrUnpaid);
-            tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
-            //save table
-                try {
-                    PrintStream ps = new PrintStream("OptionOnSaveInput.txt");
-                    ps.println(TheFirstRowOfTheTable);
-                    ps.println(TheSecondRowOfTheTable);
-                    ps.close();
-                } catch (Exception exception) {
-                    System.out.println("ERROR!");
-                    exception.printStackTrace();
-                    showMenu();
-                }
-
-                Scanner scanAnswer = new Scanner(System.in);
-            System.out.println("Would you like to continue using this programme(YES/NO): ");
-            String AnswerContinueProgramme = scanAnswer.nextLine();
-
-            if(AnswerContinueProgramme == "YES"){
-                System.out.println("You said yes");
-                showMenu();
-            }else if(AnswerContinueProgramme == "NO") {
-                System.out.println("Thank you for using this programme!");
-            }else{
-                System.out.println("The answer must be in caps!");
-                showFirstOption();
-            }
-
-
+            MakeNReadTable(name,email,ID,dateBegToString,dateEndToString,paidOrUnpaid);
+            showMenu();
         }catch(Exception e){
             System.out.println("ERROR!Try again");
             showMenu();
@@ -141,17 +96,7 @@ public class Main {
     }
     //3 look at leaves-ready
     public static void showSecondOption(){
-
-        try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            System.out.println("ERROR!");
-            e.printStackTrace();
-            showMenu();
-        }
+        ReadTable();
     }
 
     //4 look at employee leaves - not started
@@ -161,6 +106,7 @@ public class Main {
     //5 change status for leave
     public static void showFourthOption(){
         try{
+
             Scanner IndividualNumber = new Scanner(System.in);
             System.out.println("Enter individual number of leave: ");
             int IN = IndividualNumber.nextInt();
@@ -168,6 +114,7 @@ public class Main {
             Scanner scanStatusOfLeave = new Scanner(System.in);
             System.out.println("ENTER WHAT WILL BE THE STATUS OF YOUR LEAVE:");
             String status = scanStatusOfLeave.nextLine();
+            //put approved pending and declined
 
         }catch (Exception e){
             System.out.println("ERROR!");
@@ -178,8 +125,8 @@ public class Main {
     public static void main(String[] args) {
         showMenu();
     }
-   //below this is maybe worth it
-    public static void MakeNReadTable(String name,String email ,String ID,String BeginningDate,String EndDate,String paidOrUnpaid,String status){
+   //Making the table
+    public static void MakeNReadTable(String name,String email,String ID,String BeginningDate,String EndDate, String paidOrUnpaid){
         ArrayList<ArrayList<String>> tableForSavingInTheFirstOption = new ArrayList<>();
         ArrayList<String> TheFirstRowOfTheTable = new ArrayList<>();
         TheFirstRowOfTheTable.add("Name");
@@ -188,7 +135,6 @@ public class Main {
         TheFirstRowOfTheTable.add("Date of beginning");
         TheFirstRowOfTheTable.add("Date of end");
         TheFirstRowOfTheTable.add("Kind of leave");
-        TheFirstRowOfTheTable.add("Status");
         tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
 
         System.out.println();
@@ -200,9 +146,13 @@ public class Main {
         TheSecondRowOfTheTable.add(BeginningDate);
         TheSecondRowOfTheTable.add(EndDate);
         TheSecondRowOfTheTable.add(paidOrUnpaid);
-        TheSecondRowOfTheTable.add(status);
-        tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
+        tableForSavingInTheFirstOption.add(TheSecondRowOfTheTable);
         //save table
+       SaveTable(TheFirstRowOfTheTable,TheSecondRowOfTheTable);
+
+    }
+    //Method for saving the table
+    public static void SaveTable(ArrayList<String> TheFirstRowOfTheTable,ArrayList<String> TheSecondRowOfTheTable){
         try {
             PrintStream ps = new PrintStream("OptionOnSaveInput.txt");
             ps.println(TheFirstRowOfTheTable);
@@ -213,6 +163,19 @@ public class Main {
             exception.printStackTrace();
             showMenu();
 
+        }
+    }
+    //This is option two and its Reading the file which contains the table
+    public static void ReadTable(){
+        try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("ERROR!");
+            e.printStackTrace();
+            showMenu();
         }
     }
 }
