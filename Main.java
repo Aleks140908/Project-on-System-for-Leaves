@@ -18,13 +18,13 @@ public class Main {
             int num = scan.nextInt();
 
             if (num == 1) {
-                showFirstOption();
+                stateLeave();
             } else if (num == 2) {
-                showSecondOption();
+                lookAtLeaves();
             } else if (num == 3) {
-                showThirdOption();
+                lookAtLeavesForSpecificEmployee();
             } else if (num == 4) {
-                showFourthOption();
+                changeStatusForLeave();
             } else if (num == 5) {
                 showMenu();
             } else {
@@ -39,8 +39,8 @@ public class Main {
 
     }
 
-    //2 state leave - ready but have to save the requests (all of them)
-    public static void showFirstOption() {
+    //2 state leave - ready
+    public static void stateLeave() {
         try {
             //Name
             Scanner scanName = new Scanner(System.in);
@@ -98,13 +98,13 @@ public class Main {
     }
 
     //3 look at leaves-ready
-    public static void showSecondOption() {
+    public static void lookAtLeaves() {
         try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("ERROR!");
             e.printStackTrace();
             showMenu();
@@ -113,7 +113,7 @@ public class Main {
     }
 
     //4 look at employee leaves - not ready / has a problem
-    public static void showThirdOption() {
+    public static void lookAtLeavesForSpecificEmployee() {
         //read with hashset and the passcode will be the employees name;
         try {
             Scanner scanEmployee = new Scanner(System.in);
@@ -134,8 +134,8 @@ public class Main {
         }
     }
 
-    //5 change status for leave
-    public static void showFourthOption() {
+    //5 change status for leave - not even close but have an idea
+    public static void changeStatusForLeave() {
         try {
 //make or show table add one column more for the IN and status so that the status can change based on the IN
            //make the unique number
@@ -148,7 +148,7 @@ public class Main {
             int IN = IndividualNumber.nextInt();
 
             Scanner scanStatusOfLeave = new Scanner(System.in);
-            System.out.println("ENTER WHAT WILL BE THE STATUS OF YOUR LEAVE:");
+            System.out.println("ENTER WHAT WILL BE THE STATUS OF YOUR LEAVE(approved/pending/declined):");
             String status = scanStatusOfLeave.nextLine();
             //put approved pending and declined
 
@@ -162,39 +162,18 @@ public class Main {
         showMenu();
     }
 
-    //Making the table
+    //Making the table - delete first
     public static void MakeNSaveTable(String name, String email, String ID, String BeginningDate, String EndDate, String paidOrUnpaid) {
-        ArrayList<ArrayList<String>> tableForSavingInTheFirstOption = new ArrayList<>();
-        ArrayList<String> TheFirstRowOfTheTable = new ArrayList<>();
-        TheFirstRowOfTheTable.add("Name");
-        TheFirstRowOfTheTable.add("Email");
-        TheFirstRowOfTheTable.add("Id");
-        TheFirstRowOfTheTable.add("Date of beginning");
-        TheFirstRowOfTheTable.add("Date of end");
-        TheFirstRowOfTheTable.add("Kind of leave");
-        tableForSavingInTheFirstOption.add(TheFirstRowOfTheTable);
-
-        System.out.println();
-
-        ArrayList<String> TheSecondRowOfTheTable = new ArrayList<>();
-        TheSecondRowOfTheTable.add(name);
-        TheSecondRowOfTheTable.add(email);
-        TheSecondRowOfTheTable.add(ID);
-        TheSecondRowOfTheTable.add(BeginningDate);
-        TheSecondRowOfTheTable.add(EndDate);
-        TheSecondRowOfTheTable.add(paidOrUnpaid);
-        tableForSavingInTheFirstOption.add(TheSecondRowOfTheTable);
-        //save table
-        SaveTable(TheFirstRowOfTheTable, TheSecondRowOfTheTable);
-
-    }
-
-    //Method for saving the table
-    public static void SaveTable(ArrayList<String> TheFirstRowOfTheTable, ArrayList<String> TheSecondRowOfTheTable) {
         try {
-            PrintStream ps = new PrintStream("OptionOnSaveInput.txt");
-            ps.println(TheFirstRowOfTheTable);
-            ps.println(TheSecondRowOfTheTable);
+            PrintStream ps = new PrintStream(
+                    new FileOutputStream("OptionOnSaveInput.txt", true));
+            ps.print(name + ",");
+            ps.print(email+ ",");
+            ps.print(ID+ ",");
+            ps.print(BeginningDate+ ",");
+            ps.print(EndDate+ ",");
+            ps.print(paidOrUnpaid);
+            ps.println();
             ps.close();
         } catch (Exception exception) {
             System.out.println("ERROR!");
@@ -203,7 +182,6 @@ public class Main {
 
         }
     }
-
     //This is option two and its Reading the file which contains the table
     public static void ReadTable(Map<String, String> map, String filename,String person) {
 
@@ -214,7 +192,7 @@ public class Main {
                 while ((line = reader.readLine()) != null) {
                     if (line.startsWith(person + ":")) {
                         foundPerson = true;
-                        String[] parts = line.split(":");
+                        String[] parts = line.split(",");
                         if (parts.length == 2) {
                             String leave = parts[1].trim();
                             System.out.println(leave);
@@ -225,10 +203,10 @@ public class Main {
                 if (!foundPerson) {
                     System.out.println("No leaves found for " + person);
                 }
-            } catch (FileNotFoundException e) {
-                System.out.println("File not found: " + filename);
-            } catch (IOException e) {
-                System.out.println("Error reading the file: " + e.getMessage());
+
+            } catch (Exception e) {
+                System.out.println("ERROR!");
+                showMenu();
             }
 
         }
