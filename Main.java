@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -39,7 +40,7 @@ public class Main {
 
     }
 
-    //2 state leave - ready
+    //2 state leave
     public static void stateLeave() {
         try {
             //Name
@@ -97,7 +98,7 @@ public class Main {
         }
     }
 
-    //3 look at leaves-ready
+    //3 look at leaves
     public static void lookAtLeaves() {
         try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
             String line;
@@ -112,9 +113,9 @@ public class Main {
         showMenu();
     }
 
-    //4 look at employee leaves - not ready / has a problem
+    //4 look at employee leaves
     public static void lookAtLeavesForSpecificEmployee() {
-        //read with hashset and the passcode will be the employees name;
+
         try {
             Scanner scanEmployee = new Scanner(System.in);
             System.out.print("Enter the name of the employee: ");
@@ -134,24 +135,63 @@ public class Main {
         }
     }
 
-    //5 change status for leave - not even close but have an idea
+    //5 change status for leave
     public static void changeStatusForLeave() {
-        try {
-//make or show table add one column more for the IN and status so that the status can change based on the IN
-           //make the unique number
-            Random random = new Random();
-            int randomNumber = random.nextInt();
+        try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
 
-            //last step scan
-            Scanner IndividualNumber = new Scanner(System.in);
-            System.out.println("Enter individual number of leave: ");
-            int IN = IndividualNumber.nextInt();
+
+            Map<Integer, String[]> map = new HashMap<>();
+            Random random = new Random();
+
+            String line;
+            int lN = 1;
+
+            line = reader.readLine();
+            String[] arr = line.split(",");
+            int rand = random.nextInt();
+
+            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
+            ps.print(rand);
+            ps.close();
+
+            map.put(lN, arr);
+            map.put(rand, arr);
+
+            for (Map.Entry<Integer, String[]> entry : map.entrySet()) {
+                Integer key = entry.getKey();
+                String[] value = entry.getValue();
+                System.out.println("Key: " + key);
+                System.out.println("Value: " + Arrays.toString(value));
+                System.out.println();
+            }
+
+            System.out.print(String.format("%1$20s", arr[0]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[1]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[2]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[3]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[4]));
+            System.out.println();
+
+            Scanner scanIndividualNumber = new Scanner(System.in);
+            System.out.println("Enter individual number for the request: ");
+            int IN = scanIndividualNumber.nextInt();
 
             Scanner scanStatusOfLeave = new Scanner(System.in);
-            System.out.println("ENTER WHAT WILL BE THE STATUS OF YOUR LEAVE(approved/pending/declined):");
+            System.out.println("Enter the status of your leave (approved/pending/declined):");
             String status = scanStatusOfLeave.nextLine();
-            //put approved pending and declined
 
+            String[] arrayToUpdate = map.get(IN);
+            if (arrayToUpdate != null && arrayToUpdate.length >= 6) {
+                arrayToUpdate[5] = status;
+                System.out.println("Status updated.");
+            } else {
+                System.out.println("ERROR!");
+            }
+            System.out.println();
         } catch (Exception e) {
             System.out.println("ERROR!");
             showMenu();
@@ -162,11 +202,10 @@ public class Main {
         showMenu();
     }
 
-    //Making the table - delete first
+    //Making the table
     public static void MakeNSaveTable(String name, String email, String ID, String BeginningDate, String EndDate, String paidOrUnpaid) {
         try {
-            PrintStream ps = new PrintStream(
-                    new FileOutputStream("OptionOnSaveInput.txt", true));
+            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
             ps.print(name + ",");
             ps.print(email+ ",");
             ps.print(ID+ ",");
@@ -177,20 +216,18 @@ public class Main {
             ps.close();
         } catch (Exception exception) {
             System.out.println("ERROR!");
-            exception.printStackTrace();
             showMenu();
 
         }
     }
-    //This is option two and its Reading the file which contains the table
+    //Reading the file which contains the table
     public static void ReadTable(Map<String, String> map, String filename,String person) {
-
             try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
                 String line;
                 boolean foundPerson = false;
 
                 while ((line = reader.readLine()) != null) {
-                    if (line.startsWith(person + ":")) {
+                    if (line.startsWith(person)) {
                         foundPerson = true;
                         String[] parts = line.split(",");
                         if (parts.length == 2) {
@@ -201,7 +238,8 @@ public class Main {
                 }
 
                 if (!foundPerson) {
-                    System.out.println("No leaves found for " + person);
+                    System.out.println("No leaves found for employee");
+                    showMenu();
                 }
 
             } catch (Exception e) {
