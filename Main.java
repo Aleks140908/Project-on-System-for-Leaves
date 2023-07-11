@@ -48,7 +48,7 @@ public class Main {
             System.out.println("ENTER NAME:");
             String name = scanName.nextLine();
             for (char c : name.toCharArray()) {
-                // Check if the character is a number
+                // Check if the char is a number
                 if (Character.isDigit(c)) {
                     System.out.println("ERROR!There is a number in the name.");
                     showMenu();
@@ -123,13 +123,13 @@ public class Main {
 
             Map<String, String> map = new HashMap<>();
 
-
             ReadTable(map, "OptionOnSaveInput",person);
 
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 String value = entry.getValue();
                 System.out.println(value);
             }
+            showMenu();
         } catch (Exception e) {
             System.out.println("ERROR!");
         }
@@ -188,6 +188,7 @@ public class Main {
             if (arrayToUpdate != null && arrayToUpdate.length >= 6) {
                 arrayToUpdate[5] = status;
                 System.out.println("Status updated.");
+                showMenu();
             } else {
                 System.out.println("ERROR!");
             }
@@ -230,10 +231,7 @@ public class Main {
                     if (line.startsWith(person)) {
                         foundPerson = true;
                         String[] parts = line.split(",");
-                        if (parts.length == 2) {
-                            String leave = parts[1].trim();
-                            System.out.println(leave);
-                        }
+
                     }
                 }
 
@@ -249,7 +247,3 @@ public class Main {
 
         }
     }
-
-
-
-
