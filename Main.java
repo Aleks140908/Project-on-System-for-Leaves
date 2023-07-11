@@ -17,79 +17,43 @@ public class Main {
             Scanner scan = new Scanner(System.in);
             System.out.print("ENTER NUMBER OF OPTION YOU WOULD LIKE: ");
             int num = scan.nextInt();
-
-            if (num == 1) {
-                stateLeave();
-            } else if (num == 2) {
-                lookAtLeaves();
-            } else if (num == 3) {
-                lookAtLeavesForSpecificEmployee();
-            } else if (num == 4) {
-                changeStatusForLeave();
-            } else if (num == 5) {
-                showMenu();
-            } else {
-                System.out.println("!INVALID OPTION! PICK ANOTHER ONE");
-                showMenu();
-            }
+            checkNumForMenu(num);
         } catch (Exception e) {
             System.out.println("ERROR!");
             showMenu();
         }
-
-
     }
 
-    //2 state leave
     public static void stateLeave() {
         try {
-            //Name
-            Scanner scanName = new Scanner(System.in);
+            Scanner scanData = new Scanner(System.in);
             System.out.println("ENTER NAME:");
-            String name = scanName.nextLine();
-            for (char c : name.toCharArray()) {
-                // Check if the char is a number
-                if (Character.isDigit(c)) {
-                    System.out.println("ERROR!There is a number in the name.");
-                    showMenu();
-                } else {
-                    break;
-                }
-            }
-            //Email
-            Scanner scanEmail = new Scanner(System.in);
+            String name = scanData.nextLine();
+            checkIfNameHasDig(name);
+
             System.out.println("ENTER EMAIL:");
-            String email = scanEmail.nextLine();
-            //ID
-            Scanner scanIdNum = new Scanner(System.in);
+            String email = scanData.nextLine();
+
             System.out.println("ENTER IDENTIFICATION NUMBER: ");
-            int IdNumber = scanIdNum.nextInt();
-            String ID = String.valueOf(IdNumber);
+            int idNumber = scanData.nextInt();
+            String iD = String.valueOf(idNumber);
 
-            //Date Of Beginning
-            Scanner scanTheBegDate = new Scanner(System.in);
             System.out.print("Enter the beginning date of your leave (dd/MM/yyyy): ");
-            String dateInputForBeg = scanTheBegDate.nextLine();
-
+            String dateInputForBeg = scanData.nextLine();
             SimpleDateFormat dateFormatBeg = new SimpleDateFormat("dd/MM/yyyy");
             Date dateBeg = dateFormatBeg.parse(dateInputForBeg);
             String dateBegToString = dateFormatBeg.format(dateBeg);
 
-            //Date Of End
-            Scanner scanTheEndDate = new Scanner(System.in);
             System.out.print("Enter the end date of your leave (dd/MM/yyyy): ");
-            String dateInputForEnd = scanTheEndDate.nextLine();
-
+            String dateInputForEnd = scanData.nextLine();
             SimpleDateFormat dateFormatEnd = new SimpleDateFormat("dd/MM/yyyy");
             Date dateEnd = dateFormatEnd.parse(dateInputForEnd);
             String dateEndToString = dateFormatEnd.format(dateEnd);
 
-            //paid or unpaid
-            Scanner scanPaidOrUnpaid = new Scanner(System.in);
             System.out.println("ENTER PAID OR UNPAID IS THE LEAVE: ");
-            String paidOrUnpaid = scanPaidOrUnpaid.nextLine();
+            String paidOrUnpaid = scanData.nextLine();
 
-            MakeNSaveTable(name, email, ID, dateBegToString, dateEndToString, paidOrUnpaid);
+            makeNSaveTable(name, email, iD, dateBegToString, dateEndToString, paidOrUnpaid);
             System.out.println("Request Made!");
             showMenu();
         } catch (Exception e) {
@@ -123,7 +87,7 @@ public class Main {
 
             Map<String, String> map = new HashMap<>();
 
-            ReadTable(map, "OptionOnSaveInput",person);
+            readTable(map, "OptionOnSaveInput",person);
 
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 String value = entry.getValue();
@@ -138,11 +102,8 @@ public class Main {
     //5 change status for leave
     public static void changeStatusForLeave() {
         try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
-
-
             Map<Integer, String[]> map = new HashMap<>();
             Random random = new Random();
-
             String line;
             int lN = 1;
 
@@ -150,49 +111,21 @@ public class Main {
             String[] arr = line.split(",");
             int rand = random.nextInt();
 
-            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
-            ps.print(rand);
-            ps.close();
-
-            map.put(lN, arr);
-            map.put(rand, arr);
-
-            for (Map.Entry<Integer, String[]> entry : map.entrySet()) {
-                Integer key = entry.getKey();
-                String[] value = entry.getValue();
-                System.out.println("Key: " + key);
-                System.out.println("Value: " + Arrays.toString(value));
-                System.out.println();
-            }
-
-            System.out.print(String.format("%1$20s", arr[0]));
-            System.out.print("|");
-            System.out.print(String.format("%1$20s", arr[1]));
-            System.out.print("|");
-            System.out.print(String.format("%1$20s", arr[2]));
-            System.out.print("|");
-            System.out.print(String.format("%1$20s", arr[3]));
-            System.out.print("|");
-            System.out.print(String.format("%1$20s", arr[4]));
-            System.out.println();
+           printRandomNumber(rand);
+           mapPut(lN,rand,arr,map);
+           mapKeyNValue(map);
+           formatData(arr);
 
             Scanner scanIndividualNumber = new Scanner(System.in);
             System.out.println("Enter individual number for the request: ");
-            int IN = scanIndividualNumber.nextInt();
+            int iN = scanIndividualNumber.nextInt();
 
             Scanner scanStatusOfLeave = new Scanner(System.in);
             System.out.println("Enter the status of your leave (approved/pending/declined):");
             String status = scanStatusOfLeave.nextLine();
 
-            String[] arrayToUpdate = map.get(IN);
-            if (arrayToUpdate != null && arrayToUpdate.length >= 6) {
-                arrayToUpdate[5] = status;
-                System.out.println("Status updated.");
-                showMenu();
-            } else {
-                System.out.println("ERROR!");
-            }
-            System.out.println();
+            String[] arrayToUpdate = map.get(iN);
+            checkArrWithUpdates(arrayToUpdate,status,arr);
         } catch (Exception e) {
             System.out.println("ERROR!");
             showMenu();
@@ -204,7 +137,7 @@ public class Main {
     }
 
     //Making the table
-    public static void MakeNSaveTable(String name, String email, String ID, String BeginningDate, String EndDate, String paidOrUnpaid) {
+    public static void makeNSaveTable(String name, String email, String ID, String BeginningDate, String EndDate, String paidOrUnpaid) {
         try {
             PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
             ps.print(name + ",");
@@ -222,11 +155,10 @@ public class Main {
         }
     }
     //Reading the file which contains the table
-    public static void ReadTable(Map<String, String> map, String filename,String person) {
+    public static void readTable(Map<String, String> map, String filename,String person) {
             try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
                 String line;
                 boolean foundPerson = false;
-
                 while ((line = reader.readLine()) != null) {
                     if (line.startsWith(person)) {
                         foundPerson = true;
@@ -234,7 +166,6 @@ public class Main {
 
                     }
                 }
-
                 if (!foundPerson) {
                     System.out.println("No leaves found for employee");
                     showMenu();
@@ -245,5 +176,119 @@ public class Main {
                 showMenu();
             }
 
+        }
+        public static void checkIfNameHasDig(String name){
+            for (char c : name.toCharArray()) {
+                if (Character.isDigit(c)) {
+                    System.out.println("ERROR!There is a number in the name.");
+                    showMenu();
+                } else {
+                    break;
+                }
+            }
+        }
+        public static void checkNumForMenu(int num){
+        try{
+            if (num == 1) {
+                stateLeave();
+            } else if (num == 2) {
+                lookAtLeaves();
+            } else if (num == 3) {
+                lookAtLeavesForSpecificEmployee();
+            } else if (num == 4) {
+                changeStatusForLeave();
+            } else if (num == 5) {
+                showMenu();
+            } else {
+                System.out.println("!INVALID OPTION! PICK ANOTHER ONE");
+                showMenu();
+            }
+        }catch(Exception e){
+            System.out.println("ERROR!");
+            showMenu();
+        }
+        }
+        public static void printRandomNumber(int rand){
+        try{
+            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput",true));
+            ps.print(rand);
+            ps.close();
+        }catch(Exception e){
+            System.out.println("ERROR!");
+            showMenu();
+        }
+        }
+        public static void mapPut(int lN,int rand,String[] arr, Map<Integer, String[]> map){
+        try{
+            map.put(lN, arr);
+            map.put(rand, arr);
+        }catch(Exception e){
+            System.out.println("ERROR!");
+            showMenu();
+        }
+        }
+        public static void formatData(String[] arr){
+        try{
+            System.out.print(String.format("%1$20s", arr[0]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[1]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[2]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[3]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[4]));
+            System.out.println();
+        }catch(Exception e){
+            System.out.println("ERROR!");
+            showMenu();
+        }
+
+        }
+        //have to save
+        public static void formatDataWithUpdateNSave(String[] arr){
+        try{
+            System.out.print(String.format("%1$20s", arr[0]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[1]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[2]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[3]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[4]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s",arr[5]));
+            System.out.println();
+        }catch(Exception e){
+            System.out.println("ERROR!");
+            showMenu();
+        }
+        }
+        public static void mapKeyNValue(Map<Integer, String[]> map){
+            for (Map.Entry<Integer, String[]> entry : map.entrySet()) {
+                Integer key = entry.getKey();
+                String[] value = entry.getValue();
+                System.out.println("Key: " + key);
+                System.out.println("Value: " + Arrays.toString(value));
+                System.out.println();
+            }
+        }
+        public static void checkArrWithUpdates(String[] arrayToUpdate,String status,String[]arr){
+        try{
+            if (arrayToUpdate != null && arrayToUpdate.length >= 6) {
+                arrayToUpdate[5] = status;
+                System.out.println("Status updated.");
+                formatDataWithUpdateNSave(arr);
+                showMenu();
+            } else {
+                System.out.println("ERROR!");
+                showMenu();
+            }
+            System.out.println();
+        }catch(Exception e){
+            System.out.println("ERROR!");
+            showMenu();
+        }
         }
     }
