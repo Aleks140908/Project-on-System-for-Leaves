@@ -35,7 +35,7 @@ public class Main {
             String email = scanData.nextLine();
 
             System.out.println("ENTER IDENTIFICATION NUMBER: ");
-            int idNumber = scanData.nextInt();
+            int idNumber = Integer.parseInt(scanData.nextLine()); // Read the entire line and parse it as an integer
             String iD = String.valueOf(idNumber);
 
             System.out.print("Enter the beginning date of your leave (dd/MM/yyyy): ");
@@ -43,12 +43,14 @@ public class Main {
             SimpleDateFormat dateFormatBeg = new SimpleDateFormat("dd/MM/yyyy");
             Date dateBeg = dateFormatBeg.parse(dateInputForBeg);
             String dateBegToString = dateFormatBeg.format(dateBeg);
+            scanData.nextLine();
 
             System.out.print("Enter the end date of your leave (dd/MM/yyyy): ");
             String dateInputForEnd = scanData.nextLine();
             SimpleDateFormat dateFormatEnd = new SimpleDateFormat("dd/MM/yyyy");
             Date dateEnd = dateFormatEnd.parse(dateInputForEnd);
             String dateEndToString = dateFormatEnd.format(dateEnd);
+            scanData.nextLine();
 
             System.out.println("ENTER PAID OR UNPAID IS THE LEAVE: ");
             String paidOrUnpaid = scanData.nextLine();
@@ -246,7 +248,7 @@ public class Main {
 
         }
         //have to save
-        public static void formatDataWithUpdateNSave(String[] arr){
+        public static void formatDataWithUpdateNSave(String[] arr,String[] arrayToUpdate){
         try{
             System.out.print(String.format("%1$20s", arr[0]));
             System.out.print("|");
@@ -260,6 +262,16 @@ public class Main {
             System.out.print("|");
             System.out.print(String.format("%1$20s",arr[5]));
             System.out.println();
+
+            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
+            ps.print(arr[0] + ",");
+            ps.print(arr[1]+ ",");
+            ps.print(arr[2]+ ",");
+            ps.print(arr[3]+ ",");
+            ps.print(arr[4]+ ",");
+            ps.print(arrayToUpdate[5]);
+            ps.println();
+            ps.close();
         }catch(Exception e){
             System.out.println("ERROR!");
             showMenu();
@@ -279,7 +291,7 @@ public class Main {
             if (arrayToUpdate != null && arrayToUpdate.length >= 6) {
                 arrayToUpdate[5] = status;
                 System.out.println("Status updated.");
-                formatDataWithUpdateNSave(arr);
+                formatDataWithUpdateNSave(arr,arrayToUpdate);
                 showMenu();
             } else {
                 System.out.println("ERROR!");
