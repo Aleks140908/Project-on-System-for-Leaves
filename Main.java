@@ -78,28 +78,38 @@ public class Main {
         }
         showMenu();
     }
-
+/////////////////////////////////////////////////////////////////////
     //4 look at employee leaves
     public static void lookAtLeavesForSpecificEmployee() {
 
-        try {
-            Scanner scanEmployee = new Scanner(System.in);
-            System.out.print("Enter the name of the employee: ");
-            String person = scanEmployee.nextLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
+           Scanner scanEmployeeName = new Scanner(System.in);
+            System.out.println("Enter name of employee :");
+            String name = scanEmployeeName.nextLine();
 
-            Map<String, String> map = new HashMap<>();
+            Map<String, String[]> map = new HashMap<>();
+            String line;
+            line = reader.readLine();
+            String[] arr = line.split(",");
+            putValueNKeyForEmployees(map,arr,name);
+            mapKeyNValueForEmployee(map);
+            formatData(arr);
 
-            readTable(map, "OptionOnSaveInput",person);
-
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                String value = entry.getValue();
-                System.out.println(value);
-            }
+            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
+            ps.print(arr[0] + ",");
+            ps.print(arr[1]+ ",");
+            ps.print(arr[2]+ ",");
+            ps.print(arr[3]+ ",");
+            ps.print(arr[4]+ ",");
+            ps.println();
+            ps.close();
             showMenu();
         } catch (Exception e) {
             System.out.println("ERROR!");
+            showMenu();
         }
     }
+
 
     //5 change status for leave
     public static void changeStatusForLeave() {
@@ -156,23 +166,19 @@ public class Main {
 
         }
     }
-    //Reading the file which contains the table
-    public static void readTable(Map<String, String> map, String filename,String person) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-                String line;
-                boolean foundPerson = false;
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith(person)) {
-                        foundPerson = true;
-                        String[] parts = line.split(",");
+    public static void mapKeyNValueForEmployee(Map<String, String[]> map){
+        for (Map.Entry<String, String[]> entry : map.entrySet()) {
+            String key = entry.getKey();
+            String[] value = entry.getValue();
+            System.out.println("For "+ key+" requests are :");
+            System.out.println(Arrays.toString(value));
+            System.out.println();
+        }
+    }
 
-                    }
-                }
-                if (!foundPerson) {
-                    System.out.println("No leaves found for employee");
-                    showMenu();
-                }
-
+    public static void putValueNKeyForEmployees(Map<String, String[]> map,String[]arr,String name) {
+            try {
+               map.put(name,arr);
             } catch (Exception e) {
                 System.out.println("ERROR!");
                 showMenu();
@@ -240,6 +246,8 @@ public class Main {
             System.out.print(String.format("%1$20s", arr[3]));
             System.out.print("|");
             System.out.print(String.format("%1$20s", arr[4]));
+            System.out.print("|");
+            System.out.print(String.format("%1$20s", arr[5]));
             System.out.println();
         }catch(Exception e){
             System.out.println("ERROR!");
@@ -269,6 +277,7 @@ public class Main {
             ps.print(arr[2]+ ",");
             ps.print(arr[3]+ ",");
             ps.print(arr[4]+ ",");
+            ps.print(arr[5]+",");
             ps.print(arrayToUpdate[5]);
             ps.println();
             ps.close();
