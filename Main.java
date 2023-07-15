@@ -35,7 +35,7 @@ public class Main {
             String email = scanData.nextLine();
 
             System.out.println("ENTER IDENTIFICATION NUMBER: ");
-            int idNumber = Integer.parseInt(scanData.nextLine()); // Read the entire line and parse it as an integer
+            int idNumber = Integer.parseInt(scanData.nextLine());
             String iD = String.valueOf(idNumber);
 
             System.out.print("Enter the beginning date of your leave (dd/MM/yyyy): ");
@@ -78,33 +78,24 @@ public class Main {
         }
         showMenu();
     }
-/////////////////////////////////////////////////////////////////////
+
     //4 look at employee leaves
     public static void lookAtLeavesForSpecificEmployee() {
-
         try (BufferedReader reader = new BufferedReader(new FileReader("OptionOnSaveInput.txt"))) {
-           Scanner scanEmployeeName = new Scanner(System.in);
-            System.out.println("Enter name of employee :");
+            Scanner scanEmployeeName = new Scanner(System.in);
+            System.out.println("Enter name of employee:");
             String name = scanEmployeeName.nextLine();
-
-            Map<String, String[]> map = new HashMap<>();
-            String line;
-            line = reader.readLine();
-            String[] arr = line.split(",");
-            putValueNKeyForEmployees(map,arr,name);
-            mapKeyNValueForEmployee(map);
-            formatData(arr);
-
-            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
-            ps.print(arr[0] + ",");
-            ps.print(arr[1]+ ",");
-            ps.print(arr[2]+ ",");
-            ps.print(arr[3]+ ",");
-            ps.print(arr[4]+ ",");
-            ps.println();
-            ps.close();
+            String line = reader.readLine();
+            while(line!= null){
+                String[] arr = line.split(",");
+                if(arr[0].contains(name)){
+                    System.out.println("Requests for " + name + ":");
+                    formatDataForEmployee(arr);
+                }
+                line = reader.readLine();
+            }
             showMenu();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("ERROR!");
             showMenu();
         }
@@ -118,24 +109,19 @@ public class Main {
             Random random = new Random();
             String line;
             int lN = 1;
-
             line = reader.readLine();
             String[] arr = line.split(",");
             int rand = random.nextInt();
-
            printRandomNumber(rand);
            mapPut(lN,rand,arr,map);
            mapKeyNValue(map);
            formatData(arr);
-
             Scanner scanIndividualNumber = new Scanner(System.in);
             System.out.println("Enter individual number for the request: ");
             int iN = scanIndividualNumber.nextInt();
-
             Scanner scanStatusOfLeave = new Scanner(System.in);
             System.out.println("Enter the status of your leave (approved/pending/declined):");
             String status = scanStatusOfLeave.nextLine();
-
             String[] arrayToUpdate = map.get(iN);
             checkArrWithUpdates(arrayToUpdate,status,arr);
         } catch (Exception e) {
@@ -148,7 +134,6 @@ public class Main {
         showMenu();
     }
 
-    //Making the table
     public static void makeNSaveTable(String name, String email, String ID, String BeginningDate, String EndDate, String paidOrUnpaid) {
         try {
             PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
@@ -166,25 +151,6 @@ public class Main {
 
         }
     }
-    public static void mapKeyNValueForEmployee(Map<String, String[]> map){
-        for (Map.Entry<String, String[]> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String[] value = entry.getValue();
-            System.out.println("For "+ key+" requests are :");
-            System.out.println(Arrays.toString(value));
-            System.out.println();
-        }
-    }
-
-    public static void putValueNKeyForEmployees(Map<String, String[]> map,String[]arr,String name) {
-            try {
-               map.put(name,arr);
-            } catch (Exception e) {
-                System.out.println("ERROR!");
-                showMenu();
-            }
-
-        }
         public static void checkIfNameHasDig(String name){
             for (char c : name.toCharArray()) {
                 if (Character.isDigit(c)) {
@@ -235,8 +201,8 @@ public class Main {
             showMenu();
         }
         }
-        public static void formatData(String[] arr){
-        try{
+    public static void formatDataForEmployee(String[] arr) {
+        try {
             System.out.print(String.format("%1$20s", arr[0]));
             System.out.print("|");
             System.out.print(String.format("%1$20s", arr[1]));
@@ -249,13 +215,41 @@ public class Main {
             System.out.print("|");
             System.out.print(String.format("%1$20s", arr[5]));
             System.out.println();
-        }catch(Exception e){
+
+            PrintStream ps = new PrintStream(new FileOutputStream("OptionOnSaveInput.txt", true));
+            ps.print(arr[0] + ",");
+            ps.print(arr[1]+ ",");
+            ps.print(arr[2]+ ",");
+            ps.print(arr[3]+ ",");
+            ps.print(arr[4]+ ",");
+            ps.print(arr[5]);
+            ps.println();
+            ps.close();
+        } catch (Exception e) {
             System.out.println("ERROR!");
             showMenu();
         }
-
+    }
+        public static void formatData(String[] arr){
+            try {
+                System.out.print(String.format("%1$20s", arr[0]));
+                System.out.print("|");
+                System.out.print(String.format("%1$20s", arr[1]));
+                System.out.print("|");
+                System.out.print(String.format("%1$20s", arr[2]));
+                System.out.print("|");
+                System.out.print(String.format("%1$20s", arr[3]));
+                System.out.print("|");
+                System.out.print(String.format("%1$20s", arr[4]));
+                System.out.print("|");
+                System.out.print(String.format("%1$20s", arr[5]));
+                System.out.println();
+            } catch (Exception e) {
+                System.out.println("ERROR!");
+                showMenu();
+            }
         }
-        //have to save
+
         public static void formatDataWithUpdateNSave(String[] arr,String[] arrayToUpdate){
         try{
             System.out.print(String.format("%1$20s", arr[0]));
